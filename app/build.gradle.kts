@@ -63,6 +63,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.material3)
 
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+
     // Gson for serialization
     implementation(libs.gson)
 }

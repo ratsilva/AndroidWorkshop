@@ -2,8 +2,9 @@ package com.ricardo.workshop.android.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ricardo.workshop.android.data.LocalDataSource
+import com.ricardo.workshop.android.data.ApiServiceFactory
 import com.ricardo.workshop.android.data.Toast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,19 +27,20 @@ internal class ToastListViewModel : ViewModel() {
 //    }
 
     fun getToasts() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val toasts = LocalDataSource().getToasts()
+                val apiService = ApiServiceFactory.createApiService()
+                val toasts = apiService.getToasts()
                 _uiState.value = UiState.Content(toasts)
             } catch (e: Exception) {
-                _uiState.value = UiState.Error
+                _uiState.value = UiState.Error(e.localizedMessage ?: "Error")
             }
         }
     }
 
     sealed class UiState {
         data object Loading : UiState()
-        data object Error : UiState()
+        data class Error(val errorMessage: String) : UiState()
         data class Content(val toasts: List<Toast>) : UiState()
     }
 }

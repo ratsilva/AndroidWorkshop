@@ -46,7 +46,7 @@ internal fun ToastListScreenContent(
             }
         }
 
-        ToastListViewModel.UiState.Error -> Text("Error")
+        is ToastListViewModel.UiState.Error -> Text(uiState.errorMessage)
         ToastListViewModel.UiState.Loading -> CircularProgressIndicator()
     }
 }
