@@ -50,14 +50,18 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.activity.compose)
 
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
+    debugImplementation(libs.compose.tooling)
 
+    implementation(libs.compose.foundation)
 
     // Material Design
     implementation(libs.material)
+    implementation(libs.material3)
 
     // Gson for serialization
     implementation(libs.gson)
