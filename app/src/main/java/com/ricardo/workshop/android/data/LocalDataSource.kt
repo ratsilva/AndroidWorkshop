@@ -2,6 +2,8 @@ package com.ricardo.workshop.android.data
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.time.delay
+import java.time.Duration
 
 internal class LocalDataSource {
 
@@ -30,10 +32,15 @@ internal class LocalDataSource {
 ]
 """
 
-    fun getToasts(): List<Toast> {
+    suspend fun getToasts(): List<Toast> {
         // read toast list from file
         val listToastType = object : TypeToken<List<Toast>>() {}.type
         val toasts: List<Toast> = Gson().fromJson(localStorage, listToastType)
+
+        println("****** get toasts - before")
+        delay(Duration.ofSeconds(10))
+        println("****** get toasts - after")
+
         return toasts
     }
 
