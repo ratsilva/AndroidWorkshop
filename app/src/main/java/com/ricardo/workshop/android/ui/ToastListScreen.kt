@@ -20,6 +20,7 @@ internal fun ToastListScreen(
 
     ToastListScreenContent(
         modifier = modifier,
-        uiState = uiState.value
+        uiState = uiState.value,
+        onSearchItem = { viewModel.getToasts(it) }
     )
 }

@@ -16,6 +16,6 @@ Create a network layer to fetch data from a remote server
 
 ### Challenge 4
 
-Navigate to a detail screen when clicking on an item
+Add a search bar and filter toasts by name
 
 ## For final solution, check the branch `final_solution`

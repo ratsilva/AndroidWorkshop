@@ -11,14 +11,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ricardo.workshop.android.R
@@ -31,19 +38,42 @@ import java.math.BigDecimal
 @Composable
 internal fun ToastListScreenContent(
     modifier: Modifier = Modifier,
-    uiState: ToastListViewModel.UiState
+    uiState: ToastListViewModel.UiState,
+    onSearchItem: (String) -> Unit
 ) {
     when (uiState) {
         is ToastListViewModel.UiState.Content -> {
-            LazyColumn(modifier = modifier.fillMaxSize()) {
-                items(uiState.toasts.size) { position ->
-                    ToastItem(uiState.toasts[position])
-                    HorizontalDivider(
-                        color = colorResource(R.color.light_grey),
-                        thickness = 0.5.dp,
-                    )
+            val (searchTerm, setSearchTerm) = remember { mutableStateOf("") }
+
+            LaunchedEffect(searchTerm) {
+                onSearchItem(searchTerm)
+            }
+
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = searchTerm,
+                    onValueChange = { setSearchTerm(it) },
+                    label = { Text("Search") },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { })
+                )
+                LazyColumn(
+                    modifier = Modifier
+                ) {
+                    items(uiState.toasts.size) { position ->
+                        ToastItem(uiState.toasts[position])
+                        HorizontalDivider(
+                            color = colorResource(R.color.light_grey),
+                            thickness = 0.5.dp,
+                        )
+                    }
                 }
             }
+
+
         }
 
         is ToastListViewModel.UiState.Error -> Text(uiState.errorMessage)
@@ -114,7 +144,8 @@ internal fun ToastListScreenContentPreview() {
                     lastSold = "2022-01-30T02:24:04Z"
                 )
             )
-        )
+        ),
+        onSearchItem = {}
     )
 }
 
@@ -122,6 +153,7 @@ internal fun ToastListScreenContentPreview() {
 @Preview(showBackground = true)
 internal fun ToastListScreenContentLoadingPreview() {
     ToastListScreenContent(
-        uiState = ToastListViewModel.UiState.Loading
+        uiState = ToastListViewModel.UiState.Loading,
+        onSearchItem = {}
     )
 }
